@@ -14,6 +14,7 @@ interface SVGMarkerProps extends MapLayerProps {
   course?: number;
   name?: string;
   isSelf?: boolean;
+  svgIcon?: string;
 }
 
 export class SVGMarker extends MapLayer<SVGMarkerProps> {
@@ -42,7 +43,7 @@ const divIcon = (props: SVGIconProps) => {
     className: "custom-icon", //suppress default icon white box
     iconAnchor: [25, 25],
     html: ReactDOMServer.renderToString(
-      <SVGIcon course={props.course} name={props.name} isSelf={props.isSelf}/>
+      <SVGIcon course={props.course} name={props.name} isSelf={props.isSelf} svgIcon={props.svgIcon}/>
     ),
   });
 };
@@ -51,22 +52,38 @@ interface SVGIconProps {
   course?: number;
   name?: string;
   isSelf?: boolean;
+  svgIcon?: string;
 }
-const SVGIcon = (props: SVGIconProps) => (
-  <svg width="150px" height="50px" viewBox="-50 -50 325 100">
-    <g transform={`rotate(${deg(props.course || 0)})`}>
-      {props.course !== undefined && (<polygon
-        points="0 -25, 10 15, -10 15"
-        fill={props.isSelf ? 'black' : 'gray'}
-        strokeWidth="2"
-        stroke="black"
-      />)}
-      <circle r="2" stroke="black" />
-    </g>
-    <g>
-      <text x="10" style={{fontSize: 28}}>{props.name ? props.name : ""}</text>
-    </g>
-  </svg>
-);
 
+const SVGIcon = (props: SVGIconProps) => {
+  if(props.course !== undefined && props.svgIcon !== '') {
+    return(
+      <svg width="150px" height="50px" viewBox="-50 -50 325 100">
+        <g transform="scale(3)">
+          <g transform={`rotate(${deg(props.course || 0)})`} dangerouslySetInnerHTML={{__html: props.svgIcon || ''}} />
+        </g>
+        <g>
+          <text x="10" style={{fontSize: 28}}>{props.name ? props.name : ""}</text>
+        </g>
+      </svg>
+    )
+  } else {
+    return(
+      <svg width="150px" height="50px" viewBox="-50 -50 325 100">
+        <g transform={`rotate(${deg(props.course || 0)})`}>
+          {props.course !== undefined && (<polygon
+            points="0 -25, 10 15, -10 15"
+            fill={props.isSelf ? 'black' : 'gray'}
+            strokeWidth="2"
+            stroke="black"
+          />)}
+          <circle r="2" stroke="black" />
+        </g>
+        <g>
+          <text x="10" style={{fontSize: 28}}>{props.name ? props.name : ""}</text>
+        </g>
+      </svg>
+    )
+  }
+;}
 const deg = (r: number) => (r / Math.PI) * 180;

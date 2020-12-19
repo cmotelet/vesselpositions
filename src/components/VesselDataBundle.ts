@@ -16,6 +16,7 @@ export default class VesselDataBundle {
   headingSubject: Subject<number>
   speedSubject: Subject<number>
   nameSubject: Subject<string>
+  svgIconSubject: Subject<string>
   context: string
   isSelfSubject: Observable<boolean>
 
@@ -48,6 +49,7 @@ export default class VesselDataBundle {
     this.headingSubject = new ReplaySubject<number>(1)
     this.speedSubject = new ReplaySubject<number>(1)
     this.nameSubject = new BehaviorSubject('-')
+    this.svgIconSubject = new BehaviorSubject('<circle r="2" stroke="red" />')
   }
 
   nextPosition(posObject: LatLngObject) {
@@ -65,6 +67,10 @@ export default class VesselDataBundle {
 
   setName(name: string) {
     this.nameSubject.next(name)
+  }
+
+  setSvgIcon(svgIcon: string) {
+    this.svgIconSubject.next(svgIcon)
   }
 
   setRetrievedTrack(track: LatLngExpression[]) {

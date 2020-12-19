@@ -133,7 +133,7 @@ const AppPanel = (props) => {
 
     const fetchNames = () => {
       const vesselsWithNoName = Object.entries(aisTargetsRef.current).filter(([id, data]) => !data.hasName)
-      const fetchNames = vesselsWithNoName.map(([id]) => props.adminUI.get({ context: id, path: 'name' }).then(r => r.json().then(data => [id, data])))
+      const fetchNames = vesselsWithNoName.map(([id]) => props.adminUI.get({ context: id, path: '' }).then(r => r.json().then(data => [id, data])))
       Promise.allSettled(fetchNames).then(settleds => {
         const successes = settleds.filter(({ status }) => status === 'fulfilled')
         if (successes.length === 0) {
@@ -141,9 +141,10 @@ const AppPanel = (props) => {
         }
         setAisTargets((prevTargets) => {
           const result = successes.reduce((acc, { status, value }) => {
-            const [id, name] = value
+            const [id, data] = value
             acc[id].hasName = true
-            acc[id].vesselData.setName(`${name[0]}${name.slice(1).toLowerCase()}`)
+            acc[id].vesselData.setSvgIcon(data.svgIcon || '')
+            acc[id].vesselData.setName(`${data.name[0]}${data.name.slice(1).toLowerCase()}`)
             return acc
           }, { ...prevTargets })
           return result

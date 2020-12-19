@@ -20,6 +20,7 @@ const VesselDataDisplay = (props: VesselDataDisplayProps) => {
   const speed = useObservableState(vesselData.speedSubject);
   const track = useObservableState(vesselData.uptodateTrack, []);
   const name = useObservableState(vesselData.nameSubject);
+  const svgIcon = useObservableState(vesselData.svgIconSubject);
   const isSelf = useObservableState(vesselData.isSelfSubject);
   const projectionMinutes = Array.from(Array(PROJECTINMINUTES), (x, i) => i);
   const minutePositions =
@@ -42,6 +43,7 @@ const VesselDataDisplay = (props: VesselDataDisplayProps) => {
           course={heading}
           name={name}
           isSelf={isSelf}
+          svgIcon={svgIcon}
           {...props}
         />
       )}
